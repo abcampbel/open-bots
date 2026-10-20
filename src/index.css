@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Onest', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Unbounded', 'Onest', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-ink: #0e0f13;
+  --color-ink-2: #15171d;
+  --color-ink-3: #1d2028;
+  --color-ink-4: #272a33;
+  --color-fg: #ecedf0;
+  --color-fg-2: #a3a9b4;
+  --color-fg-3: #6c727e;
+
+  --color-plutus: #cc7575;
+  --color-hephaestus: #61a535;
+  --color-hermes: #3d7eaa;
+  --color-proteus: #8a8f98;
+}
+
+@layer base {
+  html, body {
+    background: var(--color-ink);
+    color: var(--color-fg);
+  }
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+  code, pre, .font-mono {
+    font-family: var(--font-mono);
+  }
+  :focus-visible {
+    outline: 2px solid #ecedf0;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: rgba(98, 179, 255, 0.28);
+    color: #fff;
+  }
+}
+
+/* ---------- Atmosphere ---------- */
+
+/* Four-colour aurora taken from the logo, kept low so the agents stay the focus */
+.aurora {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 38% at 26% 72%, rgba(97, 165, 53, 0.10), transparent 70%),
+    radial-gradient(40% 36% at 42% 64%, rgba(61, 126, 170, 0.13), transparent 70%),
+    radial-gradient(40% 36% at 60% 68%, rgba(204, 117, 117, 0.11), transparent 70%),
+    radial-gradient(40% 36% at 76% 70%, rgba(150, 155, 165, 0.07), transparent 70%),
+    radial-gradient(70% 55% at 50% -10%, rgba(255, 255, 255, 0.06), transparent 70%);
+}
+
+/* Floor horizon under the agents */
+.stage-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 46%;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 70% at 50% 0%, rgba(255, 255, 255, 0.045), transparent 70%),
+    linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.35));
+  mask-image: linear-gradient(to bottom, transparent, #000 18%);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- Stage name plates ---------- */
+
+.stage-label {
+  transform: translate(-50%, 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  opacity: 0;
+  animation: label-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  transition: background 0.25s ease;
+}
+.stage-label:hover,
+.stage-label[data-active] {
+  background: rgba(255, 255, 255, 0.04);
+}
+.stage-label-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--color-fg);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: color 0.25s ease;
+}
+.stage-label-name::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--agent-glow);
+  box-shadow: 0 0 10px var(--agent-glow);
+}
+.stage-label[data-active] .stage-label-name {
+  color: var(--agent-text);
+}
+.stage-label[data-compact] .stage-label-name { font-size: 11.5px; letter-spacing: 0.04em; }
+.stage-label-role {
+  font-size: 11.5px;
+  color: var(--color-fg-3);
+}
+
+@keyframes label-in {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ---------- Thinking dots in chat ---------- */
+
+.think-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--agent-glow, #fff);
+  animation: think 1.2s ease-in-out infinite;
+}
+.think-dot:nth-child(2) { animation-delay: 0.15s; }
+.think-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes think {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* ---------- Markdown inside agent replies ---------- */
+
+.agent-md p { margin: 0 0 0.7em; }
+.agent-md p:last-child { margin-bottom: 0; }
+.agent-md ul, .agent-md ol { margin: 0.4em 0 0.8em; padding-left: 1.25em; }
+.agent-md ul { list-style: disc; }
+.agent-md ol { list-style: decimal; }
+.agent-md li { margin: 0.2em 0; }
+.agent-md li::marker { color: var(--agent-glow); }
+.agent-md strong { color: #fff; font-weight: 600; }
+.agent-md a { color: var(--agent-text); text-decoration: underline; text-underline-offset: 3px; }
+.agent-md h1, .agent-md h2, .agent-md h3 { font-size: 0.98rem; font-weight: 600; margin: 0.9em 0 0.4em; color: #fff; }
+.agent-md table { display: block; overflow-x: auto; width: 100%; border-collapse: collapse; margin: 0.6em 0; font-size: 0.85rem; }
+.agent-md th, .agent-md td { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 6px 8px; text-align: left; }
+.agent-md blockquote { border-left: 2px solid var(--agent-glow); padding-left: 12px; color: var(--color-fg-2); margin: 0.6em 0; }
+
+/* ---------- Scrollbars ---------- */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2a2d36; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3e49; }
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-label { animation: none; opacity: 1; }
+  .think-dot { animation: none; opacity: 0.7; }
+}
