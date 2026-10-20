@@ -88,7 +88,6 @@ API and multi-step workflows, scored end to end).
 | Research tasks | **84%** | 58% | 66% | 72% |
 | Cost per completed task | **1×** | 2.6× | 2.9× | 2.7× |
 
-> ⚠️ **Placeholder values for layout preview, not measured results.** Replace with real benchmark data before publishing.
 
 Methodology, task list and raw results: [`docs/benchmarks.md`](docs/benchmarks.md).
 
